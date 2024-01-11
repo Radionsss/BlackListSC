@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">BlackListStalcraft</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="goods">Good</string>
+    <string name="bad">Bad</string>
+    <string name="nick">Nickname:</string>
+    <string name="reason">Reason:</string>
+    <string name="bad_player">Bad Player</string>
+    <string name="no_result">No results found</string>
+    <string name="bad_players">Bad Players</string>
+    <string name="nick_empty_snack_bar">Nickname cannot be empty</string>
+    <string name="good_player">Good Player</string>
+    <string name="good_players">Good Players</string>
+    <string name="degree_anger">Degree of Anger</string>
+    <string name="adding_player">Adding Player</string>
+    <string name="edit_player">Edit Player</string>
+    <string name="add">Add</string>
+    <string name="set_size_text">Change text size</string>
+    <string name="size_text">Text Size</string>
+    <string name="nick_player">Player\'s Nickname</string>
+    <string name="delete">Delete</string>
+    <string name="try_again">Try Again</string>
+    <string name="indicate_degree_anger">Indicate the degree of anger</string>
+    <string name="cancel">Cancel</string>
+    <string name="ready">Ready</string>
+    <string name="want_remove_player">Are you sure you want to remove the selected players?</string>
+    <string name="unknown_error_has_occurred">An unknown error has occurred</string>
+    <string name="view_ads">View Ads</string>
+    <string name="number_card">Card Number: 0000 0000 0000 0000</string>
+    <string name="nicks">Game Nicknames: Sinkly, Ded_net_blin_bab</string>
+    <string name="pay">Pay</string>
+    <string name="we_are_grateful_to_you">We are grateful to you for using our application! We appreciate your support in creating new projects and improving existing ones!</string>
+    <string name="reason_add_player">Reason for adding player (300 characters)</string>
+    <string name="thanks_description">If you like the app and want to help make it even better, support us financially.
+Your contribution is a step towards new possibilities and improvements!</string>
+</resources>

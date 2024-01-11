@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="increased_bottom_margin">72dp</dimen>
+    <dimen name="original_size">32dp</dimen>
+</resources>

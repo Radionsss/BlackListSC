@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/mainScreenFragment">
+
+    <fragment
+        android:id="@+id/mainScreenFragment"
+        android:name="com.stalcraft.blackliststalcraft.presenter.mainScreen.MainScreenFragment"
+        android:label="fragment_main_screen"
+        tools:layout="@layout/fragment_main_screen" >
+
+        <action
+            android:id="@+id/action_mainScreenFragment_to_addPlayerFragment"
+            app:destination="@id/addPlayerFragment" >
+        </action>
+        <action
+            android:id="@+id/action_mainScreenFragment_to_settingActivity"
+            app:destination="@id/settingActivity" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/addPlayerFragment"
+        android:name="com.stalcraft.blackliststalcraft.presenter.add.AddPlayerFragment"
+        android:label="fragment_add_player"
+        tools:layout="@layout/fragment_add_player" >
+   <action
+            android:id="@+id/action_addPlayerFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment" />
+        <argument
+            android:name="player"
+            app:argType="com.stalcraft.blackliststalcraft.data.local.entities.PlayerEntity"
+            app:nullable="true" />
+    </fragment>
+    <activity
+        android:id="@+id/settingActivity"
+        android:name="com.stalcraft.blackliststalcraft.presenter.setting.SettingActivity"
+        android:label="activity_setting"
+        tools:layout="@layout/activity_setting" />
+</navigation>

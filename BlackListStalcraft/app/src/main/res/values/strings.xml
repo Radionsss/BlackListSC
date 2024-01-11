@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">BlackListStalcraft</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="goods">Хорошие</string>
+    <string name="bad">Плохие</string>
+    <string name="nick">Ник:</string>
+    <string name="reason">Причина:</string>
+    <string name="bad_player">Плохой</string>
+    <string name="no_result">Ничего не найдено</string>
+    <string name="bad_players">Плохие</string>
+    <string name="nick_empty_snack_bar">Ник не может быть пустым</string>
+    <string name="good_player">Хороший</string>
+    <string name="good_players">Хорошие</string>
+    <string name="degree_anger">Степень злости</string>
+    <string name="adding_player">Добавление игрока</string>
+    <string name="edit_player">Изменение игрока</string>
+    <string name="add">Добавить</string>
+    <string name="set_size_text">Изменить размер текста</string>
+    <string name="size_text">Размер текста</string>
+    <string name="nick_player">Ник игрока</string>
+    <string name="delete">удалить</string>
+    <string name="try_again">Попробовать снова</string>
+    <string name="indicate_degree_anger">Укажите степень злости</string>
+    <string name="cancel">отмена</string>
+    <string name="ready">Готово</string>
+    <string name="want_remove_player">Вы точно хотите удалить выбранных игроков?</string>
+    <string name="unknown_error_has_occurred">Произошла неизвестная ошибка</string>
+    <string name="view_ads">Просмотр рекламы</string>
+    <string name="number_card">Номер карты: 0000 0000 0000 0000</string>
+    <string name="nicks">Ники в игре: Sinkly, Ded_net_blin_bab</string>
+    <string name="pay">Оплатить</string>
+    <string name="we_are_grateful_to_you">Мы благодарны вам за то что вы используете наше приложение! Будем рады вашей поддержке для создания новых проектов и улучшения существующих!</string>
+    <string name="reason_add_player">Причина добавления игрока(300 симв.)</string>
+    <string name="thanks_description">Если вам нравится приложение и вы хотите помочь стать еще лучше, поддержите нас финансово.
+Ваш вклад — это шаг к новым возможностям и улучшениям!</string>
+
+</resources>

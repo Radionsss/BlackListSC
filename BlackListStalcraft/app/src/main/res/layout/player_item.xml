@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ConstraintLightAndBlack"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+android:id="@+id/cardPlayer"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="20dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvNick"
+            style="@style/Text_black_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/nick"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvNickPlayer"
+            style="@style/Text_black_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="DedNetBlinBandit"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/tvNick"
+            app:layout_constraintStart_toEndOf="@+id/tvNick"
+            app:layout_constraintTop_toTopOf="@+id/tvNick" />
+
+
+        <LinearLayout
+            android:id="@+id/blockReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvNick"
+            app:layout_constraintTop_toBottomOf="@+id/tvNick">
+
+            <TextView
+                android:id="@+id/tvReason"
+                style="@style/Text_black_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="@string/reason"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/tvNick"
+                app:layout_constraintTop_toBottomOf="@+id/tvNick" />
+
+            <TextView
+                android:id="@+id/tvDescriptionReason"
+                style="@style/Text_black_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Занял 5 лямоdwafesfsefseefssfsfeseffsefesfsefseefseffsfesfesfsesfeesfesffesesessseeesfesfesefefsefsefesddadwadadadaddadfsefssseadadaaddawawdв"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="21.11.23"
+            android:textColor="#777777"
+            android:textSize="15dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPercentageAngerItem" />
+
+        <TextView
+            android:id="@+id/tvPercentageAngerItem"
+            style="@style/Text_black_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/degree_anger"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tvNick"
+            app:layout_constraintTop_toBottomOf="@+id/blockReason" />
+
+        <LinearLayout
+            android:id="@+id/blockDegree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="3dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvPercentageAngerItem"
+            app:layout_constraintTop_toBottomOf="@+id/tvPercentageAngerItem">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/firstAnger"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="#EC0000"
+                app:cardCornerRadius="100dp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/secondAnger"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="#EC0000"
+                app:cardCornerRadius="100dp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/thirdsAnger"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="#EC0000"
+                app:cardCornerRadius="100dp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fourthAnger"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="#EC0000"
+                app:cardCornerRadius="100dp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fifthAnger"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                app:cardBackgroundColor="#EC0000"
+                app:cardCornerRadius="100dp" />
+        </LinearLayout>
+
+        <CheckBox
+            android:visibility="invisible"
+            android:id="@+id/checkBoxCard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/btnSwap"
+            app:layout_constraintEnd_toStartOf="@+id/btnSwap"
+            app:layout_constraintTop_toTopOf="@+id/btnSwap" />
+
+
+        <ImageButton
+            android:id="@+id/btnEdit"
+            style="@style/ic_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnSwap"
+            style="@style/ic_swap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/btnEdit"
+            app:layout_constraintEnd_toStartOf="@+id/btnEdit"
+            app:layout_constraintTop_toTopOf="@+id/btnEdit" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
