@@ -3,6 +3,7 @@ package com.stalcraft.blackliststalcraft.core
 import android.content.Context
 import androidx.room.Room
 import com.stalcraft.blackliststalcraft.data.local.MainDb
+import com.stalcraft.blackliststalcraft.data.remote.FireBaseMain
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,4 +19,8 @@ object CoreModule {
     @Singleton
     fun provideMainDb(@ApplicationContext context: Context): MainDb =
         Room.databaseBuilder(context, MainDb::class.java,"blackliststalcraft.db").build()
+
+    @Provides
+    @Singleton
+    fun provideFireBaseMain(): FireBaseMain=FireBaseMain()
 }

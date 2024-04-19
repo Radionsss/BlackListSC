@@ -2,9 +2,10 @@ package com.stalcraft.blackliststalcraft.presenter.mainScreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.stalcraft.blackliststalcraft.data.local.entities.BillingEntity
-import com.stalcraft.blackliststalcraft.data.local.entities.PlayerEntity
+import com.stalcraft.blackliststalcraft.core.utils.MyResult
+import com.stalcraft.blackliststalcraft.domain.models.local.entities.PlayerEntity
 import com.stalcraft.blackliststalcraft.domain.repo.PlayerRepo
+import com.stalcraft.blackliststalcraft.domain.usecase.UpdateUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,11 +14,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainScreenViewModel @Inject constructor(private val playerRepo: PlayerRepo) : ViewModel() {
-    private val _allPlayers = MutableStateFlow<List<PlayerEntity>>(emptyList())
-    val allPlayers: StateFlow<List<PlayerEntity>> = _allPlayers
+class MainScreenViewModel @Inject constructor(private val playerRepo: PlayerRepo,private val updateUserUseCase: UpdateUserUseCase) : ViewModel() {
+    private val _goodsPlayers = MutableStateFlow<List<PlayerEntity>>(emptyList())
+    val goodsPlayers: StateFlow<List<PlayerEntity>> = _goodsPlayers
     private val _badPlayers = MutableStateFlow<List<PlayerEntity>>(emptyList())
     val badPlayers: StateFlow<List<PlayerEntity>> = _badPlayers
+
+    private val _userUpdateResult = MutableStateFlow<MyResult<Unit>?>(null)
+    val userUpdateResult: StateFlow<MyResult<Unit>?> = _userUpdateResult
 
 
     /*  fun getProvider(billing:((BillingEntity)->Unit)){
@@ -29,7 +33,7 @@ class MainScreenViewModel @Inject constructor(private val playerRepo: PlayerRepo
     fun getAllPlayer() {
         viewModelScope.launch {
             playerRepo.getAllPlayersByStatus(true).collect { users ->
-                _allPlayers.value = users
+                _goodsPlayers.value = users
             }
         }
     }
@@ -42,33 +46,25 @@ class MainScreenViewModel @Inject constructor(private val playerRepo: PlayerRepo
         }
     }
 
-    fun updateIsGoodPerson(playerId: Int, newIsGoodPerson: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            playerRepo.updateIsGoodPerson(playerId, newIsGoodPerson)
-        }
-    }
-
     fun updateIsGoodPersonAndPercentageAnger(
-        playerId: Int,
+        playerId: String,
         newIsGoodPerson: Boolean,
         newPercentageAnger: Int
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
-            playerRepo.updateIsGoodPersonAndPercentageAnger(
-                playerId,
+        viewModelScope.launch {
+            updateUserUseCase.changeGoodPersonPlayer(playerId,
                 newIsGoodPerson,
-                newPercentageAnger
-            )
+                newPercentageAnger)
+                .collect { result ->
+                    _userUpdateResult.value = result
+                }
         }
     }
 
     fun searchGoodPlayers(query: String) {
         viewModelScope.launch {
             playerRepo.searchPlayers(query).collect { users ->
-                if (users.isEmpty()) {
-
-                }
-                _allPlayers.value = users
+                _goodsPlayers.value = users
             }
         }
     }
@@ -81,7 +77,7 @@ class MainScreenViewModel @Inject constructor(private val playerRepo: PlayerRepo
         }
     }
 
-    fun deletePlayerById(playerId: Int) {
+    fun deletePlayerById(playerId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             playerRepo.deletePlayerById(playerId)
         }

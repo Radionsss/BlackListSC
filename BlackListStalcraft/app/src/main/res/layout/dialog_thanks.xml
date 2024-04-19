@@ -16,7 +16,7 @@
 
         <ImageButton
             android:id="@+id/btnClose"
-            style="@style/ic_close"
+           android:src="@drawable/ic_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
@@ -87,6 +87,7 @@
                 app:srcCompat="@drawable/google" />
 
             <TextView
+                android:layout_weight="1"
                 android:id="@+id/tvGoogle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

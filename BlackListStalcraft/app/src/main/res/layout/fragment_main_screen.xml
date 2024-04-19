@@ -62,116 +62,111 @@
     </androidx.appcompat.widget.Toolbar>
 
 
-    <LinearLayout
+    <androidx.constraintlayout.helper.widget.Flow
 
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:layout_marginHorizontal="10dp"
+        app:constraint_referenced_ids="btnGoodOrBadPlayer,btnSearch,btnSettings,btnMoney,btnAdd,btnAllPlayers"
         app:layout_constraintEnd_toEndOf="parent"
-
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnGoodOrBadPlayer"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnGoodOrBadPlayer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:cardCornerRadius="10dp">
+
+        <TextView
+            android:id="@+id/tvGoodOrBadPlayerAdd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            app:cardCornerRadius="10dp">
+            android:padding="10dp"
+            android:text="@string/goods"
+            android:textColor="#00FF38"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/tvGoodOrBadPlayerAdd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="@string/goods"
-                android:textColor="#00FF38"
-                android:textStyle="bold" />
-        </androidx.cardview.widget.CardView>
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginEnd="5dp"
-            app:cardCornerRadius="100dp"
-            app:cardElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btnSettings"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btnGoodOrBadPlayer">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnSearch"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
 
-            <SearchView
-                android:id="@+id/searchView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp">
 
-            <!-- <ImageView
-                style="@style/ic_search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp" />-->
-        </androidx.cardview.widget.CardView>
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnSettings"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+    </androidx.cardview.widget.CardView>
 
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
-            app:cardCornerRadius="100dp"
-            app:cardElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btnGoodOrBadPlayer"
-            app:layout_constraintEnd_toStartOf="@+id/btnAdd"
-            app:layout_constraintTop_toTopOf="@+id/btnGoodOrBadPlayer">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnSettings"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp">
 
-            <ImageView
-                style="@style/ic_settings"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp" />
-        </androidx.cardview.widget.CardView>
+        <ImageView
+            android:src="@drawable/ic_settings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp" />
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnAllPlayers"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp">
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnMoney"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+        <ImageView
+           android:src="@drawable/ic_people"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp" />
+    </androidx.cardview.widget.CardView>
 
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="25dp"
-            app:cardCornerRadius="100dp"
-            app:cardElevation="0dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btnGoodOrBadPlayer"
-            app:layout_constraintEnd_toStartOf="@+id/btnSettings"
-            app:layout_constraintTop_toTopOf="@+id/btnGoodOrBadPlayer">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnMoney"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnGoodOrBadPlayer"
+        app:layout_constraintEnd_toStartOf="@+id/btnSettings"
+        app:layout_constraintTop_toTopOf="@+id/btnGoodOrBadPlayer">
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="5dp"
-                android:src="@drawable/ic_money" />
-        </androidx.cardview.widget.CardView>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp"
+            android:src="@drawable/ic_money" />
+    </androidx.cardview.widget.CardView>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/btnAdd"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="10dp"
-            app:cardCornerRadius="100dp"
-            app:cardElevation="0dp">
+    <androidx.cardview.widget.CardView
+        android:id="@+id/btnAdd"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp">
 
-            <ImageView
-                style="@style/ic_plus"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp" />
+        <ImageView
+            style="@style/ic_plus"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp" />
 
-            <!--     <SearchView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />-->
-        </androidx.cardview.widget.CardView>
+        <!--     <SearchView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />-->
+    </androidx.cardview.widget.CardView>
 
-    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -186,8 +181,11 @@
         android:id="@+id/recyclerViewSecond"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
         app:layout_constraintVertical_bias="0.0" />
@@ -225,7 +223,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

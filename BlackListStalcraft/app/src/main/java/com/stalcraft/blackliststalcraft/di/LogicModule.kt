@@ -2,6 +2,7 @@ package com.stalcraft.blackliststalcraft.di
 
 import com.stalcraft.blackliststalcraft.data.local.MainDb
 import com.stalcraft.blackliststalcraft.data.local.repo.PlayerRepoImpl
+import com.stalcraft.blackliststalcraft.data.remote.FireBaseMain
 import com.stalcraft.blackliststalcraft.domain.repo.PlayerRepo
 import com.stalcraft.blackliststalcraft.domain.usecase.AddUseCase
 import dagger.Module
@@ -15,12 +16,7 @@ import javax.inject.Singleton
 object LogicModule {
     @Provides
     @Singleton
-    fun provideCourseRepo(mainDb: MainDb): PlayerRepo {
-        return PlayerRepoImpl(mainDb)
-    }
-    @Provides
-    @Singleton
-    fun provideAddUseCase(playerRepo: PlayerRepo): AddUseCase {
-        return AddUseCase(playerRepo)
+    fun provideCourseRepo(mainDb: MainDb,api: FireBaseMain): PlayerRepo {
+        return PlayerRepoImpl(mainDb,api)
     }
 }

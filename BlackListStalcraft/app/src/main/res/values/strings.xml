@@ -20,12 +20,13 @@
     <string name="size_text">Размер текста</string>
     <string name="nick_player">Ник игрока</string>
     <string name="delete">удалить</string>
-    <string name="try_again">Попробовать снова</string>
+    <string name="come_in">Войти</string>
+    <string name="try_again">Закрыть</string>
     <string name="indicate_degree_anger">Укажите степень злости</string>
     <string name="cancel">отмена</string>
     <string name="ready">Готово</string>
     <string name="want_remove_player">Вы точно хотите удалить выбранных игроков?</string>
-    <string name="unknown_error_has_occurred">Произошла неизвестная ошибка</string>
+    <string name="unknown_error_has_occurred">Произошла ошибка c подключением</string>
     <string name="view_ads">Просмотр рекламы</string>
     <string name="number_card">Номер карты: 0000 0000 0000 0000</string>
     <string name="nicks">Ники в игре: Sinkly, Ded_net_blin_bab</string>
@@ -34,5 +35,6 @@
     <string name="reason_add_player">Причина добавления игрока(300 симв.)</string>
     <string name="thanks_description">Если вам нравится приложение и вы хотите помочь стать еще лучше, поддержите нас финансово.
 Ваш вклад — это шаг к новым возможностям и улучшениям!</string>
+    <string name="default_web_client_id">21476095942-l9gp09759dv212h97is5kts8onog2upr.apps.googleusercontent.com</string>
 
 </resources>

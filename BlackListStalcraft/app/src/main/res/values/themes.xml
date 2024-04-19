@@ -17,23 +17,8 @@
     <style name="Text_black_white" >
         <item name="android:textColor">@color/black</item>
     </style>
-    <style name="ic_search" >
-        <item name="srcCompat">@drawable/ic_search_light</item>
-    </style>
-    <style name="ic_settings">
-        <item name="srcCompat">@drawable/ic_settings_light</item>
-    </style>
     <style name="ic_plus">
         <item name="srcCompat">@drawable/ic_plus_light</item>
-    </style>
-    <style name="ic_swap">
-        <item name="srcCompat">@drawable/ic_swap_light</item>
-    </style>
-    <style name="ic_edit">
-        <item name="srcCompat">@drawable/ic_edit_light</item>
-    </style>
-    <style name="ic_close">
-        <item name="srcCompat">@drawable/ic_close_light</item>
     </style>
     <style name="background_edges">
         <item name="android:background">@drawable/button_edges_background</item>

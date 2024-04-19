@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stalcraft.blackliststalcraft.presenter.utils.TextUtils.setTextSize
 import com.stalcraft.blackliststalcraft.R
 import com.stalcraft.blackliststalcraft.core.utils.Constatns
-import com.stalcraft.blackliststalcraft.data.local.entities.PlayerEntity
+import com.stalcraft.blackliststalcraft.domain.models.local.entities.PlayerEntity
 import com.stalcraft.blackliststalcraft.databinding.PlayerItemBinding
 
 import java.util.*
@@ -28,7 +28,7 @@ abstract class BasePlayerAdapter(
 ) : RecyclerView.Adapter<BasePlayerAdapter.PlayerHolder>() {
     val playerArray = ArrayList<PlayerEntity>()
     var changePlayersGetState: ((Boolean) -> Unit)? = null
-    var changePlayer: ((Int) -> Unit)? = null
+    var changePlayer: ((String) -> Unit)? = null
     var haveSelectedPlayers: ((Boolean) -> Unit)? = null
     var editPlayer: ((PlayerEntity) -> Unit)? = null
 
@@ -61,7 +61,7 @@ abstract class BasePlayerAdapter(
         private val resources: Resources,
         private val context: Context,
         private val pref: SharedPreferences,
-        private var changePlayer: ((Int) -> Unit)?,
+        private var changePlayer: ((String) -> Unit)?,
         private var changePlayersGetState: ((Boolean) -> Unit)?,
         private var haveSelectedPlayers: ((Boolean) -> Unit)?,
         private var editPlayer: ((PlayerEntity) -> Unit)?,
@@ -77,6 +77,7 @@ abstract class BasePlayerAdapter(
                     tvNickPlayer.text = player.nick
                     tvDescriptionReason.text = player.reason
                     tvDate.text = player.date
+                    tvAuthor.text = player.author
                     if (player.isNeedShowCheckBox) {
                         checkBoxCard.visibility = View.VISIBLE
                     } else {
@@ -267,7 +268,7 @@ abstract class BasePlayerAdapter(
                             }
                         }
                     } else {
-                        tvPercentageAngerItem.visibility = View.INVISIBLE
+                        tvPercentageAngerItem.visibility = View.GONE
                         blockDegree.visibility = View.GONE
                     }
                     cardPlayer.setOnLongClickListener {
@@ -278,7 +279,7 @@ abstract class BasePlayerAdapter(
                     }
                     btnSwap.setOnClickListener {
                         changePlayersGetState?.invoke( player.isGoodPerson)
-                        player.id?.let { it1 -> changePlayer?.invoke(it1) }
+                        changePlayer?.invoke(player.id)
 
                     }
                /*     noSelectedPlayers={
@@ -338,13 +339,13 @@ abstract class BasePlayerAdapter(
         playerArray.addAll(adsListTemp)
 
     }*/
-    fun deleteSelectedPlayers(id: ((Int) -> Unit)) {
+    fun deleteSelectedPlayers(id: ((String) -> Unit)) {
         haveSelectedPlayers?.invoke(false)
         val selectedPlayersDelete = playerArray.filter { it.isSelected }
         val selectedPlayersDeleteArray = playerArray.filter { !it.isSelected }
         updateAdapter(selectedPlayersDeleteArray)
         selectedPlayersDelete.forEach {
-            it.id?.let { it1 -> id.invoke(it1) }
+           id.invoke(it.id)
         }
 
     }

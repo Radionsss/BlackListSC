@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="text_light_night">#FFFFFF</color>
+    <color name="main_background">#252525</color>
+    <color name="splash_background">#252525</color>
+    <color name="dialog_background">#202020</color>
+    <color name="ed_background">#494949</color>
+    <color name="icon_color">#FFFFFF</color>
+</resources>

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "21476095942",
+    "project_id": "blackliststalcraft",
+    "storage_bucket": "blackliststalcraft.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:21476095942:android:36924a2f9ff2f3353464c7",
+        "android_client_info": {
+          "package_name": "com.stalcraft.blackliststalcraft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "21476095942-4rjk3nq5hag8gq8pb9od6vao5v4ua48o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stalcraft.blackliststalcraft",
+            "certificate_hash": "48de6b376c3f34d6815fdfb5aadf3a3791c906ab"
+          }
+        },
+        {
+          "client_id": "21476095942-l9gp09759dv212h97is5kts8onog2upr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHhG4pjagcGJBioiL1NNalIAikVOrQ4P8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "21476095942-l9gp09759dv212h97is5kts8onog2upr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

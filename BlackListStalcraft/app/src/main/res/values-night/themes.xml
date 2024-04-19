@@ -13,24 +13,11 @@
     <style name="Text_black_white" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">@color/white</item>
     </style>
-    <style name="ic_search">
-        <item name="srcCompat">@drawable/ic_search_night</item>
-    </style>
-    <style name="ic_settings">
-        <item name="srcCompat">@drawable/ic_settings_night</item>
-    </style>
+
     <style name="ic_plus">
         <item name="srcCompat">@drawable/ic_plus_night</item>
     </style>
-    <style name="ic_swap">
-        <item name="srcCompat">@drawable/ic_swap_night</item>
-    </style>
-    <style name="ic_edit">
-        <item name="srcCompat">@drawable/ic_edit_night</item>
-    </style>
-    <style name="ic_close">
-        <item name="srcCompat">@drawable/ic_close_night</item>
-    </style>
+
     <style name="btnGoogle">
         <item name="android:background">@drawable/button_edges_background_night</item>
     </style>

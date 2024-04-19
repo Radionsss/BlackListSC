@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 android:id="@+id/cardPlayer"
-    android:layout_margin="10dp"
+    android:layout_marginVertical="10dp"
     app:cardCornerRadius="20dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,11 +19,10 @@ android:id="@+id/cardPlayer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
             android:text="@string/nick"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tvAuthor" />
 
         <TextView
             android:id="@+id/tvNickPlayer"
@@ -93,6 +92,16 @@ android:id="@+id/cardPlayer"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/tvNick"
             app:layout_constraintTop_toBottomOf="@+id/blockReason" />
+
+        <TextView
+            android:id="@+id/tvAuthor"
+            style="@style/Text_black_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="author"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/tvNick"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/blockDegree"
@@ -164,7 +173,7 @@ android:id="@+id/cardPlayer"
 
         <ImageButton
             android:id="@+id/btnEdit"
-            style="@style/ic_edit"
+            android:src="@drawable/ic_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -175,7 +184,7 @@ android:id="@+id/cardPlayer"
 
         <ImageButton
             android:id="@+id/btnSwap"
-            style="@style/ic_swap"
+           android:src="@drawable/ic_swap"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/mainScreenFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/mainScreenFragment"
@@ -30,7 +30,7 @@
             app:destination="@id/mainScreenFragment" />
         <argument
             android:name="player"
-            app:argType="com.stalcraft.blackliststalcraft.data.local.entities.PlayerEntity"
+            app:argType="com.stalcraft.blackliststalcraft.domain.models.local.entities.PlayerEntity"
             app:nullable="true" />
     </fragment>
     <activity
@@ -38,4 +38,24 @@
         android:name="com.stalcraft.blackliststalcraft.presenter.setting.SettingActivity"
         android:label="activity_setting"
         tools:layout="@layout/activity_setting" />
+    <fragment
+        android:id="@+id/registrationFragment"
+        android:name="com.stalcraft.blackliststalcraft.presenter.registration.RegistrationFragment"
+        android:label="RegistrationFragment" >
+        <action
+            android:id="@+id/action_registrationFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.stalcraft.blackliststalcraft.presenter.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_registrationFragment"
+            app:destination="@id/registrationFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment" />
+    </fragment>
 </navigation>

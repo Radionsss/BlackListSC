@@ -6,8 +6,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.stalcraft.blackliststalcraft.data.local.entities.BillingEntity
-import com.stalcraft.blackliststalcraft.data.local.entities.PlayerEntity
+import com.stalcraft.blackliststalcraft.domain.models.local.entities.BillingEntity
+import com.stalcraft.blackliststalcraft.domain.models.local.entities.PlayerEntity
+import com.stalcraft.blackliststalcraft.domain.models.local.entities.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -33,12 +34,17 @@ interface PlayerDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPlayer(player: PlayerEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertUser(userEntity: UserEntity)
+   @Insert(onConflict = OnConflictStrategy.REPLACE)
+   suspend fun insertPlayers(players: List<PlayerEntity>)
 
-    @Query("UPDATE PlayerEntityTable SET isGoodPerson = :newIsGoodPerson WHERE id = :playerId")
-    suspend fun updateIsGoodPerson(playerId: Int, newIsGoodPerson: Boolean)
+
+   @Query("UPDATE PlayerEntityTable SET isGoodPerson = :newIsGoodPerson WHERE id = :playerId")
+    suspend fun updateIsGoodPerson(playerId: String, newIsGoodPerson: Boolean)
 
     @Query("UPDATE PlayerEntityTable SET isGoodPerson = :newIsGoodPerson, percentageAnger = :newPercentageAnger WHERE id = :playerId")
-    suspend fun updateIsGoodPersonAndPercentageAnger(playerId: Int, newIsGoodPerson: Boolean, newPercentageAnger: Int)
+    suspend fun updateIsGoodPersonAndPercentageAnger(playerId: String, newIsGoodPerson: Boolean, newPercentageAnger: Int)
 
     @Query("SELECT * FROM PlayerEntityTable WHERE nick LIKE :query || '%'")
     fun searchPlayers(query: String): Flow<List<PlayerEntity>>
@@ -49,13 +55,13 @@ interface PlayerDao {
             "isGoodPerson = :newIsGoodPerson, " +
             "percentageAnger = :newPercentageAnger " +
             "WHERE id = :playerId")
-    suspend fun updatePlayer(playerId: Int, newNick: String, newReason: String?, newIsGoodPerson: Boolean, newPercentageAnger: Int)
+    suspend fun updatePlayer(playerId: String, newNick: String, newReason: String?, newIsGoodPerson: Boolean, newPercentageAnger: Int)
 
     @Delete
     fun deletePlayer(player: PlayerEntity)
 
     @Query("DELETE FROM PlayerEntityTable WHERE id = :playerId")
-    suspend fun deletePlayerById(playerId: Int)
+    suspend fun deletePlayerById(playerId: String)
 
 
 }

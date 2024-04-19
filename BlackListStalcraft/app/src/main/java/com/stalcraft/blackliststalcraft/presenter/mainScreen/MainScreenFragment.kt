@@ -18,36 +18,26 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.Navigation.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.billingclient.BuildConfig
-import com.fasterxml.jackson.databind.node.DoubleNode
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.OnUserEarnedRewardListener
-import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+
+
 import com.stalcraft.blackliststalcraft.R
-import com.stalcraft.blackliststalcraft.core.utils.Constatns.AD_UNIT_ID
 import com.stalcraft.blackliststalcraft.core.utils.Constatns.REQUEST_CODE_TOKENIZE
+import com.stalcraft.blackliststalcraft.core.utils.MyResult
 import com.stalcraft.blackliststalcraft.databinding.FragmentMainScreenBinding
 import com.stalcraft.blackliststalcraft.domain.binding.BillingManager
 import com.stalcraft.blackliststalcraft.domain.binding.ProdTypesState
 import com.stalcraft.blackliststalcraft.presenter.setting.SettingActivity
-import com.stalcraft.blackliststalcraft.presenter.utils.GoogleAdManager
+
 import com.stalcraft.blackliststalcraft.presenter.utils.ShowDialogHelper
 import com.stalcraft.blackliststalcraft.presenter.utils.ShowDialogHelper.showDialogThanks
 import com.stalcraft.blackliststalcraft.presenter.utils.ShowDialogHelper.showDialogThanksChoose
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import ru.yoomoney.sdk.kassa.payments.Checkout.createTokenizationResult
 import ru.yoomoney.sdk.kassa.payments.Checkout.createTokenizeIntent
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.Amount
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.GooglePayParameters
@@ -57,22 +47,22 @@ import ru.yoomoney.sdk.kassa.payments.checkoutParameters.SavePaymentMethod
 import ru.yoomoney.sdk.kassa.payments.checkoutParameters.TestParameters
 import java.math.BigDecimal
 import java.util.Currency
-import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
 
 @AndroidEntryPoint
 class MainScreenFragment : Fragment() {
 
-    private var billingManager:BillingManager?=null
+    private var billingManager: BillingManager? = null
     private var binding: FragmentMainScreenBinding? = null
     private val viewModel: MainScreenViewModel by viewModels()
     private var haveSelectedPlayers = false
-    private var adapter: PlayerAdapter? = null
-    private var adapterSecond: PlayerAdapterSecond? = null
+    private var adapter: PlayerAdapterGoods? = null
+    private var adapterSecond: PlayerAdapterBads? = null
     private var pref: SharedPreferences? = null
     private var isGoodPlayers: Boolean = true
-    private var googleMobileAdsConsentManager: GoogleAdManager? = null
-    private var rewardedAd: RewardedAd? = null
+
+    // private var googleMobileAdsConsentManager: GoogleAdManager? = null
+    //   private var rewardedAd: RewardedAd? = null
     private var isMobileAdsInitializeCalled = AtomicBoolean(false)
     private var isLoading = false
     override fun onCreateView(
@@ -80,8 +70,8 @@ class MainScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainScreenBinding.inflate(inflater, container, false)
-        googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
-       billingManager = BillingManager(requireActivity() as AppCompatActivity)
+        //   googleMobileAdsConsentManager = GoogleAdManager(requireActivity())
+        billingManager = BillingManager(requireActivity() as AppCompatActivity)
         return binding?.root
     }
 
@@ -93,8 +83,9 @@ class MainScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        adapter = pref?.let { PlayerAdapter(requireContext(), it, requireActivity(), resources) }
-        adapterSecond = pref?.let { PlayerAdapterSecond(requireContext(), it, requireActivity(), resources) }
+        adapter = pref?.let { PlayerAdapterGoods(requireContext(), it, requireActivity(), resources) }
+        adapterSecond =
+            pref?.let { PlayerAdapterBads(requireContext(), it, requireActivity(), resources) }
         binding?.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
         binding?.recyclerView?.adapter = adapter
         binding?.recyclerViewSecond?.layoutManager = LinearLayoutManager(requireContext())
@@ -102,6 +93,7 @@ class MainScreenFragment : Fragment() {
 
         viewModel.getBadAllPlayer()
         viewModel.getAllPlayer()
+
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.badPlayers.collect { users ->
@@ -112,17 +104,39 @@ class MainScreenFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.allPlayers.collect { users ->
+                viewModel.goodsPlayers.collect { users ->
                     adapter?.updateAdapter(users)
                 }
             }
         }
 
         binding?.apply {
+            lifecycleScope.launch {
+                viewModel.userUpdateResult.collect { result ->
+                    when (result) {
+                        is MyResult.Loading -> {
+                            dimViewCourse.visibility = View.VISIBLE
+                            ShowDialogHelper.showDialogLoad(requireContext())
+                        }
+
+                        is MyResult.Success -> {
+                            dimViewCourse.visibility = View.GONE
+                            ShowDialogHelper.dismissDialogLoad()
+                        }
+
+                        is MyResult.Failure -> {
+                            ShowDialogHelper.showDialogUnknownError(requireContext())
+                        }
+
+                        null -> {}
+                    }
+                }
+            }
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(text: String?): Boolean {
                     return false
                 }
+
                 override fun onQueryTextChange(text: String?): Boolean {
                     setToolBar(false, binding)
                     adapter?.updateCheckBoxVisibility(false)
@@ -147,7 +161,11 @@ class MainScreenFragment : Fragment() {
             })
             btnGoodOrBadPlayer.setOnClickListener {
                 if (haveSelectedPlayers) {
-                    Toast.makeText(requireContext(), "У вас есть  выбранные элементы", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "У вас есть  выбранные элементы",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } else {
                     if (isGoodPlayers) {
                         isGoodPlayers = false
@@ -193,7 +211,7 @@ class MainScreenFragment : Fragment() {
                 dimViewCourse.visibility = View.VISIBLE
                 showDialogThanks(requireContext(), {
                     dimViewCourse.visibility = View.GONE
-                    showRewardedVideo()
+                    //showRewardedVideo()
                 }, {
                     Log.d("wwdwddwdwwd", "r")
                     showDialogThanksChoose(requireContext(),
@@ -202,54 +220,53 @@ class MainScreenFragment : Fragment() {
                         { billingManager?.billingSetup(ProdTypesState.HUNDRED_RUB) },
                         { billingManager?.billingSetup(ProdTypesState.TWO_HUNDRED_RUB) },
                         { dimViewCourse.visibility = View.GONE })
-                },{dimViewCourse.visibility = View.GONE })
+                }, { dimViewCourse.visibility = View.GONE })
 
 
+                /*  showDialogThanks(requireContext(), {
+                      dimViewCourse.visibility = View.GONE
+                      showRewardedVideo()
+                  }, {
+                      Log.d("wwdwddwdwwd", "r")
+                      showDialogThanksChoose(requireContext(),
+                          {
+                              viewModel.getProvider{
+                                     if(it.ruBillingProvider){
+                                         buyStartYookassa(ProdTypesState.FIVE_RUB,"")
+                                     }else{
+                                         billingManager?.billingSetup(ProdTypesState.FIVE_RUB)
+                                     }
+                              }
+                          },
+                          {
+                              viewModel.getProvider{
+                              if(it.ruBillingProvider){
 
-              /*  showDialogThanks(requireContext(), {
-                    dimViewCourse.visibility = View.GONE
-                    showRewardedVideo()
-                }, {
-                    Log.d("wwdwddwdwwd", "r")
-                    showDialogThanksChoose(requireContext(),
-                        {
-                            viewModel.getProvider{
-                                   if(it.ruBillingProvider){
-                                       buyStartYookassa(ProdTypesState.FIVE_RUB,"")
-                                   }else{
-                                       billingManager?.billingSetup(ProdTypesState.FIVE_RUB)
-                                   }
-                            }
-                        },
-                        {
-                            viewModel.getProvider{
-                            if(it.ruBillingProvider){
+                              }else{
+                                  billingManager?.billingSetup(ProdTypesState.TWENTY_RUB)
+                              }
+                          }
+                          },
+                          {
+                              viewModel.getProvider{
+                              if(it.ruBillingProvider){
 
-                            }else{
-                                billingManager?.billingSetup(ProdTypesState.TWENTY_RUB)
-                            }
-                        }
-                        },
-                        {
-                            viewModel.getProvider{
-                            if(it.ruBillingProvider){
+                              }else{
+                                  billingManager?.billingSetup(ProdTypesState.HUNDRED_RUB)
+                              }
+                          }
+                             },
+                          {
+                              viewModel.getProvider{
+                              if(it.ruBillingProvider){
 
-                            }else{
-                                billingManager?.billingSetup(ProdTypesState.HUNDRED_RUB)
-                            }
-                        }
-                           },
-                        {
-                            viewModel.getProvider{
-                            if(it.ruBillingProvider){
-
-                            }else{
-                                billingManager?.billingSetup(ProdTypesState.TWO_HUNDRED_RUB)
-                            }
-                        }
-                        },
-                        { dimViewCourse.visibility = View.GONE })
-                },{dimViewCourse.visibility = View.GONE })*/
+                              }else{
+                                  billingManager?.billingSetup(ProdTypesState.TWO_HUNDRED_RUB)
+                              }
+                          }
+                          },
+                          { dimViewCourse.visibility = View.GONE })
+                  },{dimViewCourse.visibility = View.GONE })*/
             }
 
             btnDeletePlayers.setOnClickListener {
@@ -272,84 +289,85 @@ class MainScreenFragment : Fragment() {
                 startActivity(Intent(requireContext(), SettingActivity::class.java))
             }
             btnAdd.setOnClickListener {
-                val action = MainScreenFragmentDirections.actionMainScreenFragmentToAddPlayerFragment(null)
+                val action =
+                    MainScreenFragmentDirections.actionMainScreenFragmentToAddPlayerFragment(null)
                 binding?.root?.let { it1 -> findNavController(it1).navigate(action) }
             }
-            Log.d("efeffwfwwfefewfwewfwe", "googleMobileAdsConsentManager$googleMobileAdsConsentManager")
-            googleMobileAdsConsentManager?.gatherConsent { error ->
-                if (error != null) {
-                    Log.d("efeffwfwwfefewfwewfwe", "error ${error.errorCode}: ${error.message}")
-                }
-                Log.d("efeffwfwwfefewfwewfwe", "googleMobileAdsConsentManager$googleMobileAdsConsentManager")
-                if (googleMobileAdsConsentManager?.canRequestAds == true) {
-                    initializeMobileAdsSdk()
-                }
-
-                if (googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true) {
-                    requireActivity().invalidateOptionsMenu()
-                }
-            }
+            //Log.d("efeffwfwwfefewfwewfwe", "googleMobileAdsConsentManager$googleMobileAdsConsentManager")
+//            googleMobileAdsConsentManager?.gatherConsent { error ->
+//                if (error != null) {
+//                    Log.d("efeffwfwwfefewfwewfwe", "error ${error.errorCode}: ${error.message}")
+//                }
+//                Log.d("efeffwfwwfefewfwewfwe", "googleMobileAdsConsentManager$googleMobileAdsConsentManager")
+//                if (googleMobileAdsConsentManager?.canRequestAds == true) {
+//                 //   initializeMobileAdsSdk()
+//                }
+//
+//                if (googleMobileAdsConsentManager?.isPrivacyOptionsRequired == true) {
+//                    requireActivity().invalidateOptionsMenu()
+//                }
+//            }
         }
     }
-    private fun showRewardedVideo() {
-          Log.d("efeffwfwwfefewfwewfwe", "rewardedAd$rewardedAd")
-        if (rewardedAd != null) {
-            rewardedAd?.fullScreenContentCallback =
-                object : FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d("TAG", "Ad was dismissed.")
-                        rewardedAd = null
-                        if (googleMobileAdsConsentManager?.canRequestAds == true) {
-                            loadRewardedAd()
-                        }
-                    }
+//    private fun showRewardedVideo() {
+//          Log.d("efeffwfwwfefewfwewfwe", "rewardedAd$rewardedAd")
+//        if (rewardedAd != null) {
+//            rewardedAd?.fullScreenContentCallback =
+//                object : FullScreenContentCallback() {
+//                    override fun onAdDismissedFullScreenContent() {
+//                        Log.d("TAG", "Ad was dismissed.")
+//                        rewardedAd = null
+//                        if (googleMobileAdsConsentManager?.canRequestAds == true) {
+//                            loadRewardedAd()
+//                        }
+//                    }
+//
+//                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+//                        Log.d("TAG", "Ad failed to show.")
+//
+//                        rewardedAd = null
+//                    }
+//
+//                    override fun onAdShowedFullScreenContent() {
+//                        Log.d("TAG", "Ad showed fullscreen content.")
+//                    }
+//                }
+//
+//            rewardedAd?.show(
+//                requireActivity(),
+//                OnUserEarnedRewardListener { rewardItem ->
+//                    Toast.makeText(requireContext(), "Reward + $rewardItem", Toast.LENGTH_SHORT).show()
+//                }
+//            )
+//        }
+//    }
 
-                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        Log.d("TAG", "Ad failed to show.")
 
-                        rewardedAd = null
-                    }
-
-                    override fun onAdShowedFullScreenContent() {
-                        Log.d("TAG", "Ad showed fullscreen content.")
-                    }
-                }
-
-            rewardedAd?.show(
-                requireActivity(),
-                OnUserEarnedRewardListener { rewardItem ->
-                    Toast.makeText(requireContext(), "Reward + $rewardItem", Toast.LENGTH_SHORT).show()
-                }
-            )
-        }
-    }
-
-
-    private fun initializeMobileAdsSdk() {
-        if (isMobileAdsInitializeCalled.getAndSet(true)) { return }
-        MobileAds.initialize(requireContext()) {}
-        loadRewardedAd()
-    }
-    private fun loadRewardedAd() {
-        if (rewardedAd == null) {
-            isLoading = true
-            val adRequest = AdRequest.Builder().build()
-            RewardedAd.load(requireContext(), AD_UNIT_ID, adRequest, object : RewardedAdLoadCallback() {
-                override fun onAdFailedToLoad(adError: LoadAdError) {
-                    Log.d("TAG", adError.message)
-                    isLoading = false
-                    rewardedAd = null
-                }
-
-                override fun onAdLoaded(ad: RewardedAd) {
-                    Log.d("TAG", "Ad was loaded.")
-                    rewardedAd = ad
-                    isLoading = false
-                }
-            }
-            )
-        }
-    }
+    //    private fun initializeMobileAdsSdk() {
+//        if (isMobileAdsInitializeCalled.getAndSet(true)) { return }
+//        MobileAds.initialize(requireContext()) {}
+//        loadRewardedAd()
+//    }
+//    private fun loadRewardedAd() {
+//        if (rewardedAd == null) {
+//            isLoading = true
+//            val adRequest = AdRequest.Builder().build()
+//            RewardedAd.load(requireContext(), AD_UNIT_ID, adRequest, object : RewardedAdLoadCallback() {
+//                override fun onAdFailedToLoad(adError: LoadAdError) {
+//                    Log.d("TAG", adError.message)
+//                    isLoading = false
+//                    rewardedAd = null
+//                }
+//
+//                override fun onAdLoaded(ad: RewardedAd) {
+//                    Log.d("TAG", "Ad was loaded.")
+//                    rewardedAd = ad
+//                    isLoading = false
+//                }
+//            }
+//            )
+//        }
+//    }
     private fun editPlayer() {
         adapter?.editPlayer = {
             val action =
@@ -364,7 +382,7 @@ class MainScreenFragment : Fragment() {
     }
 
     private fun changePlayers(binding: FragmentMainScreenBinding?) {
-        var playerStateLocal=false
+        var playerStateLocal = false
         adapter?.changePlayersGetState = { playerState ->
             playerStateLocal = playerState
         }
@@ -380,7 +398,7 @@ class MainScreenFragment : Fragment() {
         }
     }
 
-    private fun checkPlayerState(id: Int, playerStateLocal: Boolean) {
+    private fun checkPlayerState(id: String, playerStateLocal: Boolean) {
         if (playerStateLocal) {
             binding?.dimViewCourse?.visibility = View.VISIBLE
             ShowDialogHelper.showDialogIndicateAngePlayer(requireContext(), resources, {
@@ -389,13 +407,13 @@ class MainScreenFragment : Fragment() {
                 viewModel.updateIsGoodPersonAndPercentageAnger(id, false, countAnger)
             }
         } else {
-            viewModel.updateIsGoodPerson(id, true)
+            viewModel.updateIsGoodPersonAndPercentageAnger(id, true, 0)
         }
     }
 
     private fun haveSelectedPlayers() {
         adapter?.haveSelectedPlayers = {
-            Log.d("dadadadadadaadadad", haveSelectedPlayers.toString()+"wdwwddwwdwd")
+            Log.d("dadadadadadaadadad", haveSelectedPlayers.toString() + "wdwwddwwdwd")
             setToolBar(it, binding)
             haveSelectedPlayers = it
         }
@@ -439,6 +457,7 @@ class MainScreenFragment : Fragment() {
             }
         }
     }
+
     private fun showToken(data: Intent?) {
         /*  if (data != null) {
               Toast.makeText(
@@ -455,7 +474,12 @@ class MainScreenFragment : Fragment() {
         //  Toast.makeText(this, R.string.tokenization_canceled, Toast.LENGTH_SHORT).show()
     }
 
-    private fun onTokenizeButtonCLick(price:Double,title:String,subtitle:String,phoneNumber: String) {
+    private fun onTokenizeButtonCLick(
+        price: Double,
+        title: String,
+        subtitle: String,
+        phoneNumber: String
+    ) {
 
         val paymentMethodTypes = setOf(
             PaymentMethodType.GOOGLE_PAY,
@@ -466,42 +490,50 @@ class MainScreenFragment : Fragment() {
         )
         val paymentParameters = PaymentParameters(
             amount = Amount(BigDecimal.valueOf(price), Currency.getInstance("RUB")),
-            title =title,
-            subtitle =subtitle,
+            title = title,
+            subtitle = subtitle,
             clientApplicationKey = "BuildConfig.MERCHANT_TOKEN",
             shopId = "BuildConfig.SHOP_ID",
             savePaymentMethod = SavePaymentMethod.OFF,
             paymentMethodTypes = paymentMethodTypes,
-            gatewayId =" BuildConfig.GATEWAY_ID",
+            gatewayId = " BuildConfig.GATEWAY_ID",
             customReturnUrl = "getString(R.string.test_redirect_url)",
             userPhoneNumber = phoneNumber,
             googlePayParameters = GooglePayParameters(),
             authCenterClientId = "BuildConfig.CLIENT_ID"
         )
 
-        val intent = createTokenizeIntent(requireContext(), paymentParameters, TestParameters(showLogs = true))
+        val intent = createTokenizeIntent(
+            requireContext(),
+            paymentParameters,
+            TestParameters(showLogs = true)
+        )
         startActivityForResult(intent, REQUEST_CODE_TOKENIZE)
     }
 
 
-    private fun buyStartYookassa(prodTypestate:ProdTypesState,phoneNumber:String){
-        when(prodTypestate){
+    private fun buyStartYookassa(prodTypestate: ProdTypesState, phoneNumber: String) {
+        when (prodTypestate) {
             ProdTypesState.FIVE_RUB -> {
-                onTokenizeButtonCLick(5.0,"five_rub","five_rub_sub",phoneNumber)
+                onTokenizeButtonCLick(5.0, "five_rub", "five_rub_sub", phoneNumber)
             }
+
             ProdTypesState.TWENTY_RUB -> {
-                onTokenizeButtonCLick(20.0,"five_rub","five_rub_sub",phoneNumber)
+                onTokenizeButtonCLick(20.0, "five_rub", "five_rub_sub", phoneNumber)
             }
+
             ProdTypesState.HUNDRED_RUB -> {
-                onTokenizeButtonCLick(100.0,"five_rub","five_rub_sub",phoneNumber)
+                onTokenizeButtonCLick(100.0, "five_rub", "five_rub_sub", phoneNumber)
             }
+
             ProdTypesState.TWO_HUNDRED_RUB -> {
-                onTokenizeButtonCLick(200.0,"five_rub","five_rub_sub",phoneNumber)
+                onTokenizeButtonCLick(200.0, "five_rub", "five_rub_sub", phoneNumber)
             }
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
-        binding=null
+        binding = null
     }
 }

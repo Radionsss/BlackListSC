@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".presenter.add.AddPlayerFragment">
 
+    <View
+        android:id="@+id/dimViewCourse"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:elevation="20dp"
+        android:visibility="gone" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
