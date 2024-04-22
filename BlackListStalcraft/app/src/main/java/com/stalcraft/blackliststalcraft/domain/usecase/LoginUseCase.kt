@@ -20,7 +20,7 @@ class LoginUseCase @Inject constructor(private val playerRepo: PlayerRepo) {
 
         try {
             playerRepo.createUserRemote(nameUser)
-            val remote = playerRepo.getAllPlayersRemote().map { it.toPlayerEntity() }
+            val remote = playerRepo.getAllPlayersRemote().map { it.toPlayerEntity(false) }
             val user = playerRepo.getUser()
             withContext(Dispatchers.IO) {
 

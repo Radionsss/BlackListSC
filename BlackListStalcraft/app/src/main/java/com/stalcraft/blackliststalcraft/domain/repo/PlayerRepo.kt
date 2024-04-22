@@ -44,6 +44,8 @@ interface PlayerRepo {
     suspend fun createUserRemote(name:String)
     suspend fun getAllPlayersRemote(): List<PlayerModel>
     suspend fun getAllPlayersFromAllUsers(): List<PlayerModel>
+    suspend fun deletePlayerRemote(playerId:String)
+    suspend fun searchPlayerRemote(searchText:String): List<PlayerModel>
     suspend fun changeGoodPersonPlayer(
         playerId: String,
         isGoodPerson: Boolean,

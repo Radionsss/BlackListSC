@@ -36,11 +36,11 @@ class PlayerRepoImpl @Inject constructor(mainDb: MainDb, private val api: FireBa
     }
 
     override suspend fun getUser(): UserModel? {
-       return api.getUser()
+        return api.getUser()
     }
 
-    override suspend fun insertPlayerRemote(player: PlayerModel){
-         api.addPlayerToUser(player)
+    override suspend fun insertPlayerRemote(player: PlayerModel) {
+        api.addPlayerToUser(player)
     }
 
     override suspend fun updatePlayerRemote(player: PlayerModel) {
@@ -49,6 +49,14 @@ class PlayerRepoImpl @Inject constructor(mainDb: MainDb, private val api: FireBa
 
     override suspend fun deletePlayer(player: PlayerEntity) {
         playerDao.deletePlayer(player)
+    }
+
+    override suspend fun deletePlayerRemote(playerId: String) {
+        api.deletePlayer(playerId)
+    }
+
+    override suspend fun searchPlayerRemote(searchText: String): List<PlayerModel> {
+        return api.searchPlayerByNick(searchText)
     }
 
     override suspend fun deletePlayerById(playerId: String) {
@@ -86,7 +94,7 @@ class PlayerRepoImpl @Inject constructor(mainDb: MainDb, private val api: FireBa
     }
 
     override suspend fun createUser(userEntity: UserEntity) {
-       playerDao.insertUser(userEntity)
+        playerDao.insertUser(userEntity)
     }
 
     override suspend fun createUserRemote(name: String) {

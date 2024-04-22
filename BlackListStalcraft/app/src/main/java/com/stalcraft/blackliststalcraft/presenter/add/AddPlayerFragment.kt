@@ -37,7 +37,7 @@ class AddPlayerFragment : Fragment() {
     private var binding: FragmentAddPlayerBinding? = null
     private val viewModel: AddPlayerViewModel by viewModels()
     private var isGoodPerson = true
-    private var percentageAnger = 1
+    private var percentageAnger = 0
     private val args: AddPlayerFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -291,6 +291,9 @@ class AddPlayerFragment : Fragment() {
             }
 
             btnAdd.setOnClickListener {
+                if (!isGoodPerson && percentageAnger==0){
+                    percentageAnger++
+                }
                 val playerEntity = PlayerEntity(
                     if (args.player != null) args.player!!.id else UUID.randomUUID().toString(),
                     nick = edNickPlayer.text.toString(),

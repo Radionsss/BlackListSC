@@ -12,6 +12,9 @@
     <string name="nick_empty_snack_bar">Ник не может быть пустым</string>
     <string name="good_player">Хороший</string>
     <string name="good_players">Хорошие</string>
+    <string name="all_players">Все</string>
+    <string name="author">Автор:</string>
+    <string name="error_empty">Ник не должен быть пустым!</string>
     <string name="degree_anger">Степень злости</string>
     <string name="adding_player">Добавление игрока</string>
     <string name="edit_player">Изменение игрока</string>

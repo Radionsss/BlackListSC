@@ -19,6 +19,7 @@ import com.stalcraft.blackliststalcraft.domain.models.local.entities.PlayerEntit
 import com.stalcraft.blackliststalcraft.databinding.PlayerItemBinding
 
 import java.util.*
+import kotlin.math.log
 
 abstract class BasePlayerAdapter(
     private val context: Context,
@@ -77,7 +78,13 @@ abstract class BasePlayerAdapter(
                     tvNickPlayer.text = player.nick
                     tvDescriptionReason.text = player.reason
                     tvDate.text = player.date
-                    tvAuthor.text = player.author
+                    if (player.author!=""){
+                        tvAuthorText.text = player.author
+                        tvAuthorText.visibility = View.VISIBLE
+                        tvAuthor.visibility = View.VISIBLE
+                        btnEdit.visibility=View.GONE
+                        btnSwap.visibility=View.GONE
+                    }
                     if (player.isNeedShowCheckBox) {
                         checkBoxCard.visibility = View.VISIBLE
                     } else {
@@ -98,7 +105,7 @@ abstract class BasePlayerAdapter(
                             Constatns.TEXT_SIZE
                         )
                     )
-                    if (!player.isGoodPerson) {
+                    if (!player.isGoodPerson||player.percentageAnger>0) {
                         tvPercentageAngerItem.visibility = View.VISIBLE
                         blockDegree.visibility = View.VISIBLE
                         when (player.percentageAnger) {
@@ -272,9 +279,11 @@ abstract class BasePlayerAdapter(
                         blockDegree.visibility = View.GONE
                     }
                     cardPlayer.setOnLongClickListener {
-                        player.isSelected = true
-                        basePlayerAdapter.updateCheckBoxVisibility(true)
-                        checkBoxCard.isChecked = true
+                        if (player.author=="") {
+                            player.isSelected = true
+                            basePlayerAdapter.updateCheckBoxVisibility(true)
+                            checkBoxCard.isChecked = true
+                        }
                         true
                     }
                     btnSwap.setOnClickListener {

@@ -42,12 +42,45 @@ class FireBaseMain {
             null
         }
     }
+    suspend fun searchPlayerByNick(partialNick: String): List<PlayerModel> {
+        val dbRef = FirebaseDatabase.getInstance().getReference("users")
+        val snapshot = dbRef.get().await()
+        val matchingPlayers = mutableListOf<PlayerModel>()
+
+        for (userSnapshot in snapshot.children) {
+            val playersRef = userSnapshot.child("players")
+            for (playerSnapshot in playersRef.children) {
+                val player = playerSnapshot.getValue(PlayerModel::class.java)
+                if (player != null && player.nick.startsWith(partialNick, ignoreCase = true)) {
+                    matchingPlayers.add(player)
+                }
+            }
+        }
+        return matchingPlayers
+    }
+
     suspend fun updatePlayer(player: PlayerModel) {
         val currentUser = auth.currentUser
         val dbRef = FirebaseDatabase.getInstance().getReference("users/${currentUser?.uid}")
         val playerRef = dbRef.child("players/${player.id}")
-        playerRef.setValue(player).await()
+        val playerTemp = PlayerModel(
+            id = player.id,
+            nick = player.nick,
+            reason = player.reason,
+            author = getUser()!!.name,
+            date = player.date,
+            isGoodPerson = player.isGoodPerson,
+            percentageAnger = player.percentageAnger,
+        )
+        playerRef.setValue(playerTemp).await()
     }
+    suspend fun deletePlayer(playerId: String) {
+        val currentUser = auth.currentUser
+        val dbRef = FirebaseDatabase.getInstance().getReference("users/${currentUser?.uid}")
+        val playerRef = dbRef.child("players/$playerId")
+        playerRef.removeValue().await()
+    }
+
     suspend fun getAllPlayersFromAllUsers(): List<PlayerModel> {
          val dbRef = FirebaseDatabase.getInstance().getReference("users")
         val snapshot = dbRef.get().await()

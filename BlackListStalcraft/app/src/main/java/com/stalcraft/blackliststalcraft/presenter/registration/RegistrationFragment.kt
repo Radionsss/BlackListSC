@@ -49,7 +49,11 @@ class RegistrationFragment : Fragment() {
         setupGoogleSignInClient()
         binding?.apply {
             btnSignInGoogle.setOnClickListener {
-                signInWithGoogle()
+                if (edNickPlayer.text.toString().trim()==""){
+                    Toast.makeText(requireContext(), getString(R.string.error_empty), Toast.LENGTH_SHORT).show()
+                }else{
+                    signInWithGoogle()
+                }
             }
         }
         lifecycleScope.launch {

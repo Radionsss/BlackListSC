@@ -12,6 +12,9 @@
     <string name="nick_empty_snack_bar">Nickname cannot be empty</string>
     <string name="good_player">Good Player</string>
     <string name="good_players">Goods</string>
+    <string name="all_players">All</string>
+    <string name="author">Author:</string>
+    <string name="error_empty">Nickname must not be empty!</string>
     <string name="degree_anger">Degree of Anger</string>
     <string name="adding_player">Adding Player</string>
     <string name="edit_player">Edit Player</string>

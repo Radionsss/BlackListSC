@@ -98,9 +98,22 @@ android:id="@+id/cardPlayer"
             style="@style/Text_black_white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="author"
+            android:text="@string/author"
+            android:visibility="gone"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/tvNick"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvAuthorText"
+            style="@style/Text_black_white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="author"
+            android:visibility="gone"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/tvAuthor"
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout

@@ -13,7 +13,7 @@ data class PlayerEntity(
     val nick: String,
     val reason: String? = null,
     val date: String,
-    val author: String,
+    val author: String="",
     val isGoodPerson: Boolean = true,
     val percentageAnger: Int = 1,
     var isSelected: Boolean = false,

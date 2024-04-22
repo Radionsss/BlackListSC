@@ -15,17 +15,19 @@ fun PlayerEntity.toPlayerModel(): PlayerModel {
         percentageAnger = this.percentageAnger,
     )
 }
-fun PlayerModel.toPlayerEntity(): PlayerEntity {
+
+fun PlayerModel.toPlayerEntity(fillAuthor: Boolean = true): PlayerEntity {
     return PlayerEntity(
         id = this.id,
         nick = this.nick,
         reason = this.reason,
         date = this.date,
-        author = this.author,
+        author = if (fillAuthor) "" else this.author,
         isGoodPerson = this.isGoodPerson,
         percentageAnger = this.percentageAnger,
     )
 }
+
 fun UserModel.toUserEntity(): UserEntity {
     return UserEntity(
         id = this.id,

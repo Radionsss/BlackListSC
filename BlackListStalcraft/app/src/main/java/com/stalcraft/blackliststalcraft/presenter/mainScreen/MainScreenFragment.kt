@@ -31,6 +31,7 @@ import com.stalcraft.blackliststalcraft.core.utils.MyResult
 import com.stalcraft.blackliststalcraft.databinding.FragmentMainScreenBinding
 import com.stalcraft.blackliststalcraft.domain.binding.BillingManager
 import com.stalcraft.blackliststalcraft.domain.binding.ProdTypesState
+import com.stalcraft.blackliststalcraft.domain.models.local.entities.PlayerEntity
 import com.stalcraft.blackliststalcraft.presenter.setting.SettingActivity
 
 import com.stalcraft.blackliststalcraft.presenter.utils.ShowDialogHelper
@@ -58,6 +59,7 @@ class MainScreenFragment : Fragment() {
     private var haveSelectedPlayers = false
     private var adapter: PlayerAdapterGoods? = null
     private var adapterSecond: PlayerAdapterBads? = null
+    private var adapterAll: PlayerAdapterAll? = null
     private var pref: SharedPreferences? = null
     private var isGoodPlayers: Boolean = true
 
@@ -83,13 +85,18 @@ class MainScreenFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        adapter = pref?.let { PlayerAdapterGoods(requireContext(), it, requireActivity(), resources) }
+        adapter =
+            pref?.let { PlayerAdapterGoods(requireContext(), it, requireActivity(), resources) }
         adapterSecond =
             pref?.let { PlayerAdapterBads(requireContext(), it, requireActivity(), resources) }
+        adapterAll =
+            pref?.let { PlayerAdapterAll(requireContext(), it, requireActivity(), resources) }
         binding?.recyclerView?.layoutManager = LinearLayoutManager(requireContext())
         binding?.recyclerView?.adapter = adapter
         binding?.recyclerViewSecond?.layoutManager = LinearLayoutManager(requireContext())
         binding?.recyclerViewSecond?.adapter = adapterSecond
+        binding?.recyclerViewAll?.layoutManager = LinearLayoutManager(requireContext())
+        binding?.recyclerViewAll?.adapter = adapterAll
 
         viewModel.getBadAllPlayer()
         viewModel.getAllPlayer()
@@ -101,6 +108,32 @@ class MainScreenFragment : Fragment() {
                 }
             }
         }
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.userUpdateResult.collect { result ->
+                    result?.let { myResult ->
+                        when (myResult) {
+                            is MyResult.Success -> {
+                                binding?.dimViewCourse?.visibility = View.GONE
+                                ShowDialogHelper.dismissDialogLoad()
+
+                            }
+
+                            is MyResult.Failure -> {
+                                ShowDialogHelper.showDialogUnknownError(requireContext())
+
+                            }
+
+                            MyResult.Loading -> {
+                                binding?.dimViewCourse?.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogLoad(requireContext())
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -110,25 +143,58 @@ class MainScreenFragment : Fragment() {
             }
         }
 
+
+
         binding?.apply {
-            lifecycleScope.launch {
-                viewModel.userUpdateResult.collect { result ->
-                    when (result) {
-                        is MyResult.Loading -> {
-                            dimViewCourse.visibility = View.VISIBLE
-                            ShowDialogHelper.showDialogLoad(requireContext())
-                        }
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.usersResult.collect { result ->
+                          when (result) {
+                            is MyResult.Loading -> {
+                                dimViewCourse.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogLoad(requireContext())
+                            }
 
-                        is MyResult.Success -> {
-                            dimViewCourse.visibility = View.GONE
-                            ShowDialogHelper.dismissDialogLoad()
-                        }
+                            is MyResult.Success -> {
+                                val players: List<PlayerEntity> = result.data
+                                adapterAll?.updateAdapter(players)
+                                tvGoodOrBadPlayerAdd.text = getString(R.string.all_players)
+                                dimViewCourse.visibility = View.GONE
+                                ShowDialogHelper.dismissDialogLoad()
+                                recyclerView.visibility = View.INVISIBLE
+                                recyclerViewSecond.visibility = View.INVISIBLE
+                                recyclerViewAll.visibility = View.VISIBLE
+                            }
 
-                        is MyResult.Failure -> {
-                            ShowDialogHelper.showDialogUnknownError(requireContext())
-                        }
+                            is MyResult.Failure -> {
+                                ShowDialogHelper.showDialogUnknownError(requireContext())
+                            }
 
-                        null -> {}
+                            null -> {}
+                        }
+                    }
+                }
+            }
+            viewLifecycleOwner.lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    viewModel.deleteResult.collect { result ->
+                        when (result) {
+                            is MyResult.Loading -> {
+                                dimViewCourse.visibility = View.VISIBLE
+                                ShowDialogHelper.showDialogLoad(requireContext())
+                            }
+
+                            is MyResult.Success -> {
+                                dimViewCourse.visibility = View.GONE
+                                ShowDialogHelper.dismissDialogLoad()
+                            }
+
+                            is MyResult.Failure -> {
+                                ShowDialogHelper.showDialogUnknownError(requireContext())
+                            }
+
+                            null -> {}
+                        }
                     }
                 }
             }
@@ -142,17 +208,22 @@ class MainScreenFragment : Fragment() {
                     adapter?.updateCheckBoxVisibility(false)
                     if (!text.isNullOrBlank()) {
                         val searchText = text.trim()
-                        if (isGoodPlayers) {
-                            viewModel.searchGoodPlayers(searchText)
-                        } else {
-                            viewModel.searchBadPlayers(searchText)
+                        if (tvGoodOrBadPlayerAdd.text==getString(R.string.all_players)){
+                            viewModel.searchPlayers(searchText)
+                        }else{
+                            if (isGoodPlayers) {
+                                viewModel.searchGoodPlayers(searchText)
+                            } else {
+                                viewModel.searchBadPlayers(searchText)
 
+                            }
                         }
                     }
                     if (text != null) {
                         if (text.isEmpty()) {
                             viewModel.getBadAllPlayer()
                             viewModel.getAllPlayer()
+                            if (tvGoodOrBadPlayerAdd.text==getString(R.string.all_players)) viewModel.getAllPlayersFromAllUsers()
                         }
                     }
                     return true
@@ -176,14 +247,17 @@ class MainScreenFragment : Fragment() {
                                 R.color.red
                             )
                         )
+                        recyclerViewAll.visibility = View.INVISIBLE
                         recyclerView.visibility = View.INVISIBLE
                         recyclerViewSecond.visibility = View.VISIBLE
                     } else {
                         isGoodPlayers = true
+
                         tvGoodOrBadPlayerAdd.text = getString(R.string.good_players)
                         tvGoodOrBadPlayerAdd.setTextColor(
                             ContextCompat.getColor(requireContext(), R.color.green)
                         )
+                        recyclerViewAll.visibility = View.INVISIBLE
                         recyclerViewSecond.visibility = View.INVISIBLE
                         recyclerView.visibility = View.VISIBLE
                     }
@@ -196,16 +270,21 @@ class MainScreenFragment : Fragment() {
 
             searchView.setOnSearchClickListener {
                 btnMoney.visibility = View.GONE
-                btnSettings.visibility = View.GONE
+              //  btnSettings.visibility = View.GONE
                 btnAdd.visibility = View.GONE
+                btnAllPlayers.visibility = View.GONE
                 expandSearchView()
 
             }
             searchView.setOnCloseListener {
                 btnMoney.visibility = View.VISIBLE
-                btnSettings.visibility = View.VISIBLE
+            //    btnSettings.visibility = View.VISIBLE
                 btnAdd.visibility = View.VISIBLE
+                btnAllPlayers.visibility = View.VISIBLE
                 false
+            }
+            btnAllPlayers.setOnClickListener {
+                viewModel.getAllPlayersFromAllUsers()
             }
             btnMoney.setOnClickListener {
                 dimViewCourse.visibility = View.VISIBLE
@@ -282,7 +361,6 @@ class MainScreenFragment : Fragment() {
                     binding?.btnDeletePlayers?.visibility = View.GONE
                     adapter?.deleteSelectedPlayers { viewModel.deletePlayerById(it) }
                     adapterSecond?.deleteSelectedPlayers { viewModel.deletePlayerById(it) }
-                    //  adapter?.updateCheckBoxVisibility(false)
                 }
             }
             btnSettings.setOnClickListener {
