@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -21,8 +20,6 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.stalcraft.blackliststalcraft.R
 import com.stalcraft.blackliststalcraft.core.utils.MyResult
 import com.stalcraft.blackliststalcraft.databinding.FragmentRegistrationBinding
-import com.stalcraft.blackliststalcraft.presenter.mainScreen.MainScreenFragmentDirections
-import com.stalcraft.blackliststalcraft.presenter.mainScreen.MainScreenViewModel
 import com.stalcraft.blackliststalcraft.presenter.utils.ShowDialogHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -73,7 +70,7 @@ class RegistrationFragment : Fragment() {
                     }
 
                     is MyResult.Failure -> {
-                        ShowDialogHelper.showDialogUnknownError(requireContext())
+                        ShowDialogHelper.showDialogError(requireContext(),getString(R.string.unknown_error_has_occurred))
                     }
 
                     null -> {}

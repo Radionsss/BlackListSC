@@ -16,20 +16,19 @@ import java.util.concurrent.TimeoutException
 import javax.inject.Inject
 
 class AddUseCase @Inject constructor(private val playerRepo: PlayerRepo) {
+    fun insertUserInfo(playerEntity: PlayerEntity): Flow<MyResult<Unit>> = flow {
+        emit(MyResult.Loading)
+        Log.d("rererecsdcscrere", "$playerEntity")
 
-     fun insertUserInfo(playerEntity: PlayerEntity): Flow<MyResult<Unit>> = flow {
-            emit(MyResult.Loading)
-
-            try {
-                val response = playerRepo.insertPlayerRemote(playerEntity.toPlayerModel())
-                withContext(Dispatchers.IO) {
-                    playerRepo.insertPlayer(playerEntity)
-                }
-                emit(MyResult.Success(data = response))
-            } catch (e: Exception) {
-                Log.d("rerererere", "$e")
-                emit(MyResult.Failure(e))
+        try {
+            val response = playerRepo.insertPlayerRemote(playerEntity.toPlayerModel())
+            withContext(Dispatchers.IO) {
+                playerRepo.insertPlayer(playerEntity)
             }
-
+            emit(MyResult.Success(data = response))
+        } catch (e: Exception) {
+            Log.d("rererecsdcscrere", "$e")
+            emit(MyResult.Failure(e))
+        }
     }
 }

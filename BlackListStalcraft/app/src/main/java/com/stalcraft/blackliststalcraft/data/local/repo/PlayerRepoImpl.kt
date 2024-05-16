@@ -63,6 +63,7 @@ class PlayerRepoImpl @Inject constructor(mainDb: MainDb, private val api: FireBa
         playerDao.deletePlayerById(playerId)
     }
 
+
     override suspend fun searchPlayers(query: String): Flow<List<PlayerEntity>> =
         playerDao.searchPlayers(query)
 
@@ -106,6 +107,7 @@ class PlayerRepoImpl @Inject constructor(mainDb: MainDb, private val api: FireBa
     }
 
     override suspend fun getAllPlayersFromAllUsers(): List<PlayerModel> {
+        Log.d("FirebaseErrfewwffweor", "${api.getAllPlayersFromAllUsers()}")
         return api.getAllPlayersFromAllUsers()
     }
 

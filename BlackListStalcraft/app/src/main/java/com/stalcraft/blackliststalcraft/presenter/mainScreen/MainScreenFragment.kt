@@ -120,7 +120,7 @@ class MainScreenFragment : Fragment() {
                             }
 
                             is MyResult.Failure -> {
-                                ShowDialogHelper.showDialogUnknownError(requireContext())
+                                ShowDialogHelper.showDialogError(requireContext(),getString(R.string.unknown_error_has_occurred))
 
                             }
 
@@ -167,10 +167,14 @@ class MainScreenFragment : Fragment() {
                             }
 
                             is MyResult.Failure -> {
-                                ShowDialogHelper.showDialogUnknownError(requireContext())
+                                dimViewCourse.visibility = View.GONE
+                                ShowDialogHelper.dismissDialogLoad()
+                                ShowDialogHelper.showDialogError(requireContext(),getString(R.string.unknown_error_has_occurred))
                             }
 
-                            null -> {}
+                            null -> {
+
+                            }
                         }
                     }
                 }
@@ -190,7 +194,7 @@ class MainScreenFragment : Fragment() {
                             }
 
                             is MyResult.Failure -> {
-                                ShowDialogHelper.showDialogUnknownError(requireContext())
+                                ShowDialogHelper.showDialogError(requireContext(),getString(R.string.unknown_error_has_occurred))
                             }
 
                             null -> {}

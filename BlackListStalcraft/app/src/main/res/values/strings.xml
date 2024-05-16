@@ -31,6 +31,7 @@
     <string name="want_remove_player">Вы точно хотите удалить выбранных игроков?</string>
     <string name="unknown_error_has_occurred">Произошла ошибка c подключением</string>
     <string name="view_ads">Просмотр рекламы</string>
+    <string name="already_player">Такой игрок уже есть</string>
     <string name="number_card">Номер карты: 0000 0000 0000 0000</string>
     <string name="nicks">Ники в игре: Sinkly, Ded_net_blin_bab</string>
     <string name="pay">Оплатить</string>

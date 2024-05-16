@@ -4,12 +4,18 @@ import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.getValue
+import com.stalcraft.blackliststalcraft.core.utils.Constatns.ALREADY_HAVE_PLAYER
 import com.stalcraft.blackliststalcraft.domain.models.remote.models.PlayerModel
 import com.stalcraft.blackliststalcraft.domain.models.remote.models.UserModel
 import kotlinx.coroutines.tasks.await
+import kotlin.math.log
 
 class FireBaseMain {
     private val auth = FirebaseAuth.getInstance()
+    suspend fun isNickExists(nick: String): Boolean {
+        val allPlayers = getAllPlayersFromAllUsers()
+        return allPlayers.any { it.nick.equals(nick, ignoreCase = true) }
+    }
 
     suspend fun addUser(name: String) {
         val currentUser = auth.currentUser
@@ -36,12 +42,14 @@ class FireBaseMain {
             val userMap = snapshot.getValue<HashMap<String, Any>>() // Получаем данные как HashMap
             val id = userMap?.get("id").toString()
             val name = userMap?.get("name").toString()
-            val players = userMap?.get("players") as? List<PlayerModel> ?: emptyList() // Преобразуем players в список или пустой список, если он не является списком
+            val players = userMap?.get("players") as? List<PlayerModel>
+                ?: emptyList() // Преобразуем players в список или пустой список, если он не является списком
             UserModel(id, name, players)
         } else {
             null
         }
     }
+
     suspend fun searchPlayerByNick(partialNick: String): List<PlayerModel> {
         val dbRef = FirebaseDatabase.getInstance().getReference("users")
         val snapshot = dbRef.get().await()
@@ -74,6 +82,7 @@ class FireBaseMain {
         )
         playerRef.setValue(playerTemp).await()
     }
+
     suspend fun deletePlayer(playerId: String) {
         val currentUser = auth.currentUser
         val dbRef = FirebaseDatabase.getInstance().getReference("users/${currentUser?.uid}")
@@ -82,7 +91,7 @@ class FireBaseMain {
     }
 
     suspend fun getAllPlayersFromAllUsers(): List<PlayerModel> {
-         val dbRef = FirebaseDatabase.getInstance().getReference("users")
+        val dbRef = FirebaseDatabase.getInstance().getReference("users")
         val snapshot = dbRef.get().await()
 
         val allPlayers = mutableListOf<PlayerModel>()
@@ -118,7 +127,9 @@ class FireBaseMain {
     }
 
     suspend fun addPlayerToUser(player: PlayerModel) {
-
+        if (isNickExists(player.nick)) {
+            throw IllegalArgumentException(ALREADY_HAVE_PLAYER)
+        }
         val currentUser = auth.currentUser
         val dbRef = FirebaseDatabase.getInstance().getReference("users/${currentUser?.uid}")
         val newPlayerRef = dbRef.child("players/${player.id}")
@@ -131,7 +142,10 @@ class FireBaseMain {
             isGoodPerson = player.isGoodPerson,
             percentageAnger = player.percentageAnger,
         )
+        Log.d("osjnfsefesefsfsfsnenfsij", "addPlayerToUser:${playerTemp} ")
+
         newPlayerRef.setValue(playerTemp).await()
+
     }
 
     suspend fun changeGoodPersonPlayer(

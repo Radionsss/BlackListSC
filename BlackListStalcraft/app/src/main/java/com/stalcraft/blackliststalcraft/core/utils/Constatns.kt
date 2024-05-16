@@ -12,4 +12,6 @@ object Constatns {
     const val TWO_HUNDRED_ID = "two_hundred_rub_id"
     const val REQUEST_CODE_TOKENIZE = 12346
     const val AD_UNIT_ID = "ca-app-pub-3940256099942544/5224354917"
+
+    const val ALREADY_HAVE_PLAYER="ALREADY_HAVE_PLAYER"
 }

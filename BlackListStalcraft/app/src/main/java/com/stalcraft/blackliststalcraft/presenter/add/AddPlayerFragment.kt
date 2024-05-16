@@ -3,25 +3,19 @@ package com.stalcraft.blackliststalcraft.presenter.add
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
-import androidx.annotation.VisibleForTesting
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintLayoutStates
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.snackbar.Snackbar
 import com.stalcraft.blackliststalcraft.R
-import com.stalcraft.blackliststalcraft.core.exception.AddPlayerErrorEnum
+import com.stalcraft.blackliststalcraft.core.utils.Constatns.ALREADY_HAVE_PLAYER
 import com.stalcraft.blackliststalcraft.core.utils.MyResult
 import com.stalcraft.blackliststalcraft.domain.models.local.entities.PlayerEntity
 import com.stalcraft.blackliststalcraft.databinding.FragmentAddPlayerBinding
@@ -80,7 +74,13 @@ class AddPlayerFragment : Fragment() {
                             }
                         }
                         is MyResult.Failure -> {
-                            ShowDialogHelper.showDialogUnknownError(requireContext())
+                            dimViewCourse.visibility=View.GONE
+                            ShowDialogHelper.dismissDialogLoad()
+                            if (result.exception.message==ALREADY_HAVE_PLAYER){
+                                ShowDialogHelper.showDialogError(requireContext(),getString(R.string.already_player))
+                            }else {
+                                ShowDialogHelper.showDialogError(requireContext(),getString(R.string.unknown_error_has_occurred))
+                            }
                         }
 
                         null -> {}
@@ -296,7 +296,7 @@ class AddPlayerFragment : Fragment() {
                 }
                 val playerEntity = PlayerEntity(
                     if (args.player != null) args.player!!.id else UUID.randomUUID().toString(),
-                    nick = edNickPlayer.text.toString(),
+                    nick = edNickPlayer.text.toString().trim(),
                     reason = edDescriptionReason.text.toString(),
                     date = getCurrentDateTime(),
                     isGoodPerson = isGoodPerson,

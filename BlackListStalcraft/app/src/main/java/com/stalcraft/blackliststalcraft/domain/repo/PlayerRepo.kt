@@ -24,6 +24,7 @@ interface PlayerRepo {
     suspend fun updatePlayerRemote(player: PlayerModel)
     suspend fun deletePlayer(player: PlayerEntity)
     suspend fun deletePlayerById(playerId: String)
+
     suspend fun searchPlayers(query: String): Flow<List<PlayerEntity>>
     suspend fun updateIsGoodPersonAndPercentageAnger(
         playerId: String,

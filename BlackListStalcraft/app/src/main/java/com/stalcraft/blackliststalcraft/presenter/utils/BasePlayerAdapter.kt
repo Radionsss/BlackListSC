@@ -278,13 +278,15 @@ abstract class BasePlayerAdapter(
                         tvPercentageAngerItem.visibility = View.GONE
                         blockDegree.visibility = View.GONE
                     }
-                    cardPlayer.setOnLongClickListener {
-                        if (player.author=="") {
-                            player.isSelected = true
-                            basePlayerAdapter.updateCheckBoxVisibility(true)
-                            checkBoxCard.isChecked = true
+                    if (tvAuthor.visibility==View.GONE) {
+                        cardPlayer.setOnLongClickListener {
+                            if (player.author == "") {
+                                player.isSelected = true
+                                basePlayerAdapter.updateCheckBoxVisibility(true)
+                                checkBoxCard.isChecked = true
+                            }
+                            true
                         }
-                        true
                     }
                     btnSwap.setOnClickListener {
                         changePlayersGetState?.invoke( player.isGoodPerson)

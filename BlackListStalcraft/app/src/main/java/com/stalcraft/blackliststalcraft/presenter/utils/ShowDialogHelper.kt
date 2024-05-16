@@ -9,6 +9,7 @@ import android.content.res.Resources
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import com.airbnb.lottie.LottieAnimationView
@@ -182,21 +183,21 @@ object ShowDialogHelper {
         }
     }
 
-    fun showDialogUnknownError(
+    fun showDialogError(
         context: Context,
+        text:String
     ) {
         if (!unknownError) {
             unknownError = true
             dialog = Dialog(context, android.R.style.Theme_Black_NoTitleBar_Fullscreen)
             dialog?.setContentView(R.layout.dialog_network_error)
             dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
-            val btnTryAgainUnknownError =
-                dialog?.findViewById<CardView>(R.id.btnTryAgainUnknownError)
-
+            val btnTryAgainUnknownError = dialog?.findViewById<CardView>(R.id.btnTryAgainUnknownError)
+            val tvError = dialog?.findViewById<TextView>(R.id.tvError)
+            tvError?.text=text
             btnTryAgainUnknownError?.setOnClickListener {
                 dialog?.dismiss()
                 dialog = null
-                //tryAgain.invoke()
             }
             val lottieAnimationView: LottieAnimationView? = dialog?.findViewById(R.id.lottieAnimationView)
             lottieAnimationView?.alpha = 0f
